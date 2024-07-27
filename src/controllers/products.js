@@ -1,9 +1,10 @@
 import {
   getAllProductsService,
   getProductByIdService,
+  createProductService,
 } from "../services/products.js";
 
-export const getAllProducts = async (req, res, next) => {
+export const getAllProducts = async (req, res) => {
     const products = await getAllProductsService();
     res.status(200).json({
       message: "Successfully found products!",
@@ -11,7 +12,7 @@ export const getAllProducts = async (req, res, next) => {
       status: 200,
     });
 };
-export const getProductById = async (req, res, next) => {
+export const getProductById = async (req, res) => {
   const { productId } = req.params;
     const product = await getProductByIdService(productId);
     if (!product) {
@@ -27,9 +28,13 @@ export const getProductById = async (req, res, next) => {
     });
 };
 
-export const createProduct =  () => {
-// name - обов’язково;
-// price - обов’язково;
-// category - не обов’язково;
-// description - не обов’язково;
+export const createProduct = async (req, res) => {
+  const product = await createProductService(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: "Successfully created a product!",
+    data: product,
+   });
+
 };

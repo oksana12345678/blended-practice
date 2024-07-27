@@ -12,7 +12,7 @@ router.get("/", ctrlWrapper(getAllProducts));
 
 router.get("/:productId", ctrlWrapper(getProductById));
 
-router.post("/products", ctrlWrapper(createProduct));
+router.post("/", ctrlWrapper(createProduct));
 
 export default router;
 
