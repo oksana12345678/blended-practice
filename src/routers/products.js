@@ -5,6 +5,8 @@ import {
   createProduct,
 } from "../controllers/products.js";
 import { ctrlWrapper } from "../utils/ctrlWrapper.js";
+import { validateBody } from "../utils/validateBody.js";
+import { createProductSchema } from "../validation/product.js";
 
 const router = Router();
 
@@ -12,7 +14,7 @@ router.get("/", ctrlWrapper(getAllProducts));
 
 router.get("/:productId", ctrlWrapper(getProductById));
 
-router.post("/", ctrlWrapper(createProduct));
+router.post("/", validateBody(createProductSchema), ctrlWrapper(createProduct));
 
 export default router;
 
