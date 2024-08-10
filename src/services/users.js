@@ -26,3 +26,8 @@ export const setUpSession = async (userId) => {
     userId,
   });
 };
+
+export const findeSession =  (token) => 
+   Session.findOne({ accessToken: token });
+  
+export const userById = (id) => User.findById(id );
