@@ -7,7 +7,7 @@ export const findUserByEmail = (email) =>
     email,
   });
 
-const updateUserWithToken = (userId) => {
+export const updateUserWithToken = (userId) => {
   const token = jwt.sign(
     {
       userId,
@@ -27,4 +27,7 @@ export const createUser = async (userData) => {
   return updateUserWithToken(user._id);
 };
 
-// export const userById = (id) => User.findById(id );
+export const userById = (id) => User.findById(id);
+
+export const logoutService = (userId) =>
+  User.findByIdAndUpdate(userId, { token: "" });

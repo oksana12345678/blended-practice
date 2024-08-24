@@ -1,9 +1,11 @@
-import { createUser } from "../services/users.js";
-// import { setUpCookies } from "../utils/setUpCookies.js";
-
+import {
+  createUser,
+  logoutService,
+  updateUserWithToken,
+} from "../services/users.js";
 import createHttpError from "http-errors";
 import { findUserByEmail } from "../services/users.js";
-// import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 
 export const registerUser = async (req, res) => {
   const { email } = req.body;
@@ -21,28 +23,39 @@ export const registerUser = async (req, res) => {
   });
 };
 
-// export const loginUser = async (req, res) => {
-//   const { email, password } = req.body;
-//   const user = await findUserByEmail(email);
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await findUserByEmail(email);
+  if (!user) {
+    throw createHttpError(404, "User not found!");
+  }
+  const isEqual = await bcrypt.compare(password, user.password);
+  if (!isEqual) {
+    throw createHttpError(401, "User not found");
+  }
+  const updatedUser = await updateUserWithToken(user._id);
 
-//   if (!user) {
-//     throw createHttpError(404, "User not found!");
-//   }
+  res.status(200).json({
+    user: {
+      name: updatedUser.name,
+      email: updatedUser.email,
+    },
+    token: updatedUser.token,
+  });
+};
 
-//   const isEqual = await bcrypt.compare(password, user.password);
+export const logout = async (req, res) => {
+  const userId = req.user._id;
+  await logoutService(userId);
 
-//   if (!isEqual) {
-//     throw createHttpError(401, "User not found");
-//   }
+  res.status(204).send();
+};
 
-//   const session = await setUpSession(user._id);
-//   setUpCookies(res, session);
+export const refreshUser = (req, res) => {
+  const { email, name } = req.user;
 
-//   res.status(200).json({
-//     status: 200,
-//     message: "Successfully logged in an user!",
-//     data: {
-//       accessToken: session.accessToken,
-//     },
-//   });
-// };
+  res.status(200).json({
+    name,
+    email,
+  });
+};
