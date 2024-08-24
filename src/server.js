@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import productRouter from "./routers/products.js";
+
 import { errorHandler } from "./middlewares/errorHandler.js";
 import authRouter from "./routers/auth.js";
 
@@ -16,7 +16,6 @@ export const setupServer = () => {
   app.use(cors());
 
   app.use("/users", authRouter);
-  app.use("/products", productRouter);
 
   app.use("*", notFoundHandler);
   app.use(errorHandler);
